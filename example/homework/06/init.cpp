@@ -16,8 +16,10 @@ void matrixVectorAdd(const Kokkos::View<int**>& matrix, const Kokkos::View<int*>
     printf("Dimension mismatch!");
     return;
   }
-  Kokkos::parallel_for("matrixColumnVectorAdd", Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {row, col}), KOKKOS_LAMBDA(const int i, const int j) {
-    result(i, j) = matrix(i, j) + vector(j); 
+  Kokkos::parallel_for("matrixVectorAdd", row, KOKKOS_LAMBDA(const int i) {
+    for(int j = 0; j < col; ++j) {
+      result(i, j) = matrix(i, j) + vector(i);
+    }
   });
 }
 

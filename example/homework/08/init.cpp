@@ -7,22 +7,22 @@
 //     [224, 158, 187]       [12]
 //     [ 54, 211, 120]       [157]
 // Extra credit: make a function and check for correct shape/dimensions
-void matrixVectorMul(const Kokkos::View<int**>& matrix, const Kokkos::View<int*>& vector, Kokkos::View<int**>& result) {
-  auto row = matrix.extent(0);
-  auto col = matrix.extent(1);
-  
+void matrixVectorMul(const Kokkos::View<int**>& matrix, const Kokkos::View<int*>& vector, Kokkos::View<int*>& result) {
+  auto rows = matrix.extent(0);
+  auto cols = matrix.extent(1);
+
   // Check for correct dimensions
-  if(vector.extent(0) != row) {
-    printf("Dimension mismatch!");
-    return;
+  if(vector.extent(0) != cols) {
+      printf("Dimension mismatch: Matrix columns must match Vector length!\n");
+      return;
   }
 
-  Kokkos::parallel_for("matrixVectorMultiply", row, KOKKOS_LAMBDA(const int i) {
-    int temp = 0;
-    for (int j = 0; j < col; ++j) { // Use `col` for column count
-      temp += matrix(i, j) * vector(j);
-    }
-    result(i) = temp; // Correctly assign computed value to the result
+  Kokkos::parallel_for("matrixVectorMultiply", rows, KOKKOS_LAMBDA(const int i) {
+      int temp = 0;
+      for (int j = 0; j < cols; ++j) {
+          temp += matrix(i, j) * vector(j);
+      }
+      result(i) = temp;
   });
 }
 
