@@ -18,11 +18,11 @@ void matrixVectorMul(const Kokkos::View<int**>& matrix, const Kokkos::View<int*>
   }
 
   Kokkos::parallel_for("matrixVectorMultiply", row, KOKKOS_LAMBDA(const int i) {
-  int temp = 0;
-  for(int j = 0; j < numCols; ++j) {
-    temp += matrix(i, j) * vector(j);
-  }
-  result(i) = temp;
+    int temp = 0;
+    for (int j = 0; j < col; ++j) { // Use `col` for column count
+      temp += matrix(i, j) * vector(j);
+    }
+    result(i) = temp; // Correctly assign computed value to the result
   });
 }
 
@@ -31,10 +31,10 @@ int main(int argc, char* argv[]) {
   {
   // Make View and add values
   
-    int result = 0;
+
     Kokkos::View<int**> a("Matrix A", 3, 3);
     Kokkos::View<int*> b("Vector B", 3);
-    Kokkos::View<int*> resultA("Result", result);
+    Kokkos::View<int*> resultA("Result", 3);
   // Do a matrix multiply
     auto A = Kokkos::create_mirror_view(a);
     auto B = Kokkos::create_mirror_view(b);
@@ -48,15 +48,12 @@ int main(int argc, char* argv[]) {
     Kokkos::deep_copy(b, B);
   // Output addition 
 
-    matrixVectorMul(a, b, result);
+    matrixVectorMul(a, b, resultA);
   // Output addition 
-    auto resultTemp = Kokkos::create_mirror_view(result);
-    Kokkos::deep_copy(resultTemp, result);
-    for(int i = 0; i < 3; ++i) {
-      for(int j = 0; j < 3; ++j) {
-        printf("%d ", resultTemp(i, j));
-      }
-      printf("\n");
+    auto resultTemp = Kokkos::create_mirror_view(resultA);
+    Kokkos::deep_copy(resultTemp, resultA);
+    for (int i = 0; i < 3; ++i) {
+        printf("%d\n", resultTemp(i)); 
     }
   
   }
