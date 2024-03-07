@@ -13,7 +13,7 @@ void matrixVectorAdd(const Kokkos::View<int**>& matrix, const Kokkos::View<int*>
   
   // Check for correct dimensions
   if(vector.extent(0) != row) {
-    std::cerr << "Dimension mismatch!" << std::endl;
+    printf("Dimension mismatch!");
     return;
   }
   Kokkos::parallel_for("matrixVectorAdd", row, KOKKOS_LAMBDA(const int i) {
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     
     B(0) = 221; B(1) = 12; B(2) = 157;
     Kokkos::deep_copy(a, A);
-    Kokkos::deep_copy(b, B)
+    Kokkos::deep_copy(b, B);
 
     matrixVectorAdd(a, b, result);
   // Output addition 

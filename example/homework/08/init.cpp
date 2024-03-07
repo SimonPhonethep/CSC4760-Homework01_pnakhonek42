@@ -13,7 +13,7 @@ void matrixVectorMul(const Kokkos::View<int**>& matrix, const Kokkos::View<int*>
   
   // Check for correct dimensions
   if(vector.extent(0) != row) {
-    std::cerr << "Dimension mismatch!" << std::endl;
+    printf("Dimension mismatch!");
     return;
   }
 
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
       }
       printf("\n");
     }
-  }
+  
   }
   Kokkos::finalize();
 }
