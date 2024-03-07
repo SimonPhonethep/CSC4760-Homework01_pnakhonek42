@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
   // Make View
     Kokkos::View<double*> myView("Problem 1 view", 10);
   // print name
-    std::cout << "View Label: " << myView.label() << std::endl;
+    printf("View label: %s\n", myView.label().c_str());
   }
   Kokkos::finalize();
 }
